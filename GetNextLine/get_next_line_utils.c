@@ -6,10 +6,23 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:15:20 by tkartasl          #+#    #+#             */
-/*   Updated: 2023/11/21 14:33:14 by tkartasl         ###   ########.fr       */
+/*   Updated: 2023/11/23 12:47:05 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
+
+void	ft_bzero(void *s, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+	{
+		(*(char *)s = 0);
+		i++;
+		s++;
+	}
+}
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
