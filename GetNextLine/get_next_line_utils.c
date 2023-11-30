@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:15:20 by tkartasl          #+#    #+#             */
-/*   Updated: 2023/11/28 15:06:53 by tkartasl         ###   ########.fr       */
+/*   Updated: 2023/11/30 10:22:59 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -47,10 +47,15 @@ char	*ft_strjoin(char *s1, char *s2)
 	char	*s;
 	int		n;
 
+	if (!s1 || !s2)
+		return (0);
 	n = 0;
 	s = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (s == NULL)
-		return (NULL);
+	if (s == 0)
+	{
+		free (s1);
+		return (0);
+	}
 	while (s1[n] != '\0')
 	{
 		s[n] = s1[n];
@@ -61,9 +66,8 @@ char	*ft_strjoin(char *s1, char *s2)
 		s[n++] = *s2;
 		s2++;
 	}
-    if (s1[0] != '\0')
-		free (s1);
 	s[n] = 0;
+	free (s1);
 	return (s);
 }
 

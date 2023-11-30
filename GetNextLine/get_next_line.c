@@ -6,11 +6,10 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 09:43:07 by tkartasl          #+#    #+#             */
-/*   Updated: 2023/11/28 16:06:56 by tkartasl         ###   ########.fr       */
+/*   Updated: 2023/11/30 10:26:01 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
-#include <stdio.h>
 
 static void	ft_get_remain(char *buffer)
 {
@@ -34,7 +33,7 @@ static void	ft_get_remain(char *buffer)
 			i++;
 		}
 		buffer[i] = 0;
-	} 
+	}
 	else
 		ft_bzero(buffer, BUFFER_SIZE + 1);
 }
@@ -52,13 +51,9 @@ static char	*ft_trim_line(char *str)
 		len++;
 	temp = ft_strndup(str, len);
 	free (str);
+	if (temp == 0)
+		return (0);
 	str = temp;
-/*	else
-	{
-		temp = ft_strndup(str, len);
-		free (str);
-		str = temp;
-	}*/
 	return (str);
 }
 
@@ -67,21 +62,21 @@ static char	*ft_cpy_line(int fd, char *buffer, char *str, size_t bcount)
 	char	*line;
 
 	line = 0;
-	if (buffer[0] != 0)
-		str = ft_strndup(buffer, ft_strlen(buffer));
-	else
-		str = "\0";
+	str = ft_strndup(buffer, ft_strlen(buffer));
 	if (str == 0)
 		return (0);
 	while (ft_strchr(buffer, '\n') == 0 && bcount == BUFFER_SIZE)
 	{
 		ft_bzero(buffer, BUFFER_SIZE + 1);
-		bcount = read(fd, buffer, BUFFER_SIZE); 
+		bcount = read(fd, buffer, BUFFER_SIZE);
 		if (bcount < 0)
+		{
+			free (str);
 			return (0);
+		}
 		if (bcount == 0)
-			return (NULL);
-		str = ft_strjoin(str, buffer); 
+			return (str);
+		str = ft_strjoin(str, buffer);
 		if (str == 0)
 			return (0);
 	}
@@ -100,10 +95,18 @@ char	*get_next_line(int fd)
 	str = 0;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
+	if (read(fd, 0, 0) < 0)
+	{
+		ft_bzero(buffer, BUFFER_SIZE + 1);
+		return (0);
+	}
 	str = ft_cpy_line(fd, buffer, str, bcount);
 	if (str == 0)
 		return (0);
 	if (*str == 0)
+	{
+		free (str);
 		return (0);
+	}
 	return (str);
 }
